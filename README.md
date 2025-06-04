@@ -1,7 +1,8 @@
 # CPP_EX4_25
 
 **Author:** Nitzan Wainshtein  
-**ID:** 209086263  
+**ID:** 209086263 
+**Email:** Nitzanwa@gmail.com 
 **Github repo:** https://github.com/NitzanWainshtein/CPP_EX4_25
  
 
