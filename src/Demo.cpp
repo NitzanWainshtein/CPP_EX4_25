@@ -204,6 +204,72 @@ void testEdgeCases() {
     printIteratorResult("MiddleOut", twoContainer.begin_middle_out_order(), twoContainer.end_middle_out_order());
 }
 
+// Test postfix operators (new addition)
+void testPostfixOperators() {
+    printHeader("POSTFIX OPERATORS DEMONSTRATION");
+    
+    MyContainer<int> container;
+    for (int i = 1; i <= 5; ++i) {
+        container.addElement(i);
+    }
+    
+    std::cout << "Container: " << container << std::endl;
+    
+    std::cout << "\n--- Prefix vs Postfix Demonstration ---" << std::endl;
+    
+    // Test with ascending iterator
+    std::cout << "\nAscending Iterator:" << std::endl;
+    auto ascIt = container.begin_ascending_order();
+    
+    // Prefix (++it)
+    std::cout << "Using prefix (++it):" << std::endl;
+    std::cout << "Initial value: " << *ascIt << std::endl;
+    std::cout << "Return value of ++it: " << *(++ascIt) << std::endl;
+    std::cout << "Value after operation: " << *ascIt << std::endl;
+    
+    // Reset iterator
+    ascIt = container.begin_ascending_order();
+    
+    // Postfix (it++)
+    std::cout << "\nUsing postfix (it++):" << std::endl;
+    std::cout << "Initial value: " << *ascIt << std::endl;
+    std::cout << "Return value of it++: " << *(ascIt++) << std::endl;
+    std::cout << "Value after operation: " << *ascIt << std::endl;
+    
+    // Test with other iterators
+    std::cout << "\nTesting all iterator types with postfix:" << std::endl;
+    
+    std::cout << "Descending: ";
+    for (auto it = container.begin_descending_order(); it != container.end_descending_order(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "SideCross: ";
+    for (auto it = container.begin_side_cross_order(); it != container.end_side_cross_order(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "Reverse: ";
+    for (auto it = container.begin_reverse_order(); it != container.end_reverse_order(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "Order: ";
+    for (auto it = container.begin_order(); it != container.end_order(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+    
+    std::cout << "MiddleOut: ";
+    for (auto it = container.begin_middle_out_order(); it != container.end_middle_out_order(); it++) {
+        std::cout << *it << " ";
+    }
+    std::cout << std::endl;
+}
+
 int main() {
     std::cout <<""<< std::endl;
     std::cout << "           MyContainer demo : " << std::endl;
@@ -216,6 +282,7 @@ int main() {
         testDefaultType();
         testCopyOperations();
         testEdgeCases();
+        testPostfixOperators();  // New test for postfix operators
         
         printHeader("DEMO COMPLETED");
         std::cout << "MyContainer is working correctly." << std::endl;

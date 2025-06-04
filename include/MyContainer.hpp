@@ -7,6 +7,7 @@
 #include <vector>
 #include <algorithm>
 #include <stdexcept>
+#include <iomanip>
 
 namespace ex4 {
     
@@ -95,7 +96,8 @@ namespace ex4 {
 
         /**
          * Output operator for printing the container
-         * Prints elements in format: [element1, element2, element3]
+         * Prints elements in format: ["element1", "element2"] for strings
+         * or [element1, element2] for other types
          * @param os Output stream
          * @param container The container to print
          * @return Reference to the output stream for chaining
@@ -108,7 +110,13 @@ namespace ex4 {
             }
             
             for (size_t i = 0; i < container.elements.size(); ++i) {
-                os << container.elements[i];
+                // Add quotes for strings to make them clearer
+                if constexpr (std::is_same_v<T, std::string>) {
+                    os << "\"" << container.elements[i] << "\"";
+                } else {
+                    os << container.elements[i];
+                }
+                
                 if (i < container.elements.size() - 1) { 
                     os << ", ";
                 }
@@ -127,16 +135,27 @@ namespace ex4 {
         private:
             std::vector<T> sorted_elements;
             size_t current_index;
+            const MyContainer<T>* owner;  // Added to fix comparison issue
 
         public:
-            AscendingIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : sorted_elements(original_elements), current_index(index) {
+            AscendingIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : sorted_elements(original_elements), current_index(index), owner(container_owner) {
                 std::sort(sorted_elements.begin(), sorted_elements.end());
             }
 
             const T& operator*() const { return sorted_elements[current_index]; }
             AscendingIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const AscendingIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            AscendingIterator operator++(int) {
+                AscendingIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const AscendingIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const AscendingIterator& other) const { return !(*this == other); }
         };
 
@@ -148,16 +167,27 @@ namespace ex4 {
         private:
             std::vector<T> sorted_elements;
             size_t current_index;
+            const MyContainer<T>* owner;
 
         public:
-            DescendingIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : sorted_elements(original_elements), current_index(index) {
+            DescendingIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : sorted_elements(original_elements), current_index(index), owner(container_owner) {
                 std::sort(sorted_elements.rbegin(), sorted_elements.rend());
             }
 
             const T& operator*() const { return sorted_elements[current_index]; }
             DescendingIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const DescendingIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            DescendingIterator operator++(int) {
+                DescendingIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const DescendingIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const DescendingIterator& other) const { return !(*this == other); }
         };
 
@@ -170,10 +200,16 @@ namespace ex4 {
         private:
             std::vector<T> cross_ordered_elements;
             size_t current_index;
+            const MyContainer<T>* owner;
 
         public:
-            SideCrossIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : current_index(index) {
+            SideCrossIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : current_index(index), owner(container_owner) {
+                
+                // Fix: Handle empty container case
+                if (original_elements.empty()) {
+                    return;
+                }
                 
                 std::vector<T> sorted_elements = original_elements;
                 std::sort(sorted_elements.begin(), sorted_elements.end());
@@ -181,7 +217,7 @@ namespace ex4 {
                 cross_ordered_elements.reserve(sorted_elements.size());
                 
                 size_t left = 0;
-                size_t right = sorted_elements.size() - 1;
+                size_t right = sorted_elements.size() - 1;  // Now safe!
                 bool take_from_left = true;
                 
                 while (left <= right) {
@@ -196,7 +232,17 @@ namespace ex4 {
 
             const T& operator*() const { return cross_ordered_elements[current_index]; }
             SideCrossIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const SideCrossIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            SideCrossIterator operator++(int) {
+                SideCrossIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const SideCrossIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const SideCrossIterator& other) const { return !(*this == other); }
         };
 
@@ -209,16 +255,27 @@ namespace ex4 {
         private:
             std::vector<T> reversed_elements;
             size_t current_index;
+            const MyContainer<T>* owner;
 
         public:
-            ReverseIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : reversed_elements(original_elements), current_index(index) {
+            ReverseIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : reversed_elements(original_elements), current_index(index), owner(container_owner) {
                 std::reverse(reversed_elements.begin(), reversed_elements.end());
             }
 
             const T& operator*() const { return reversed_elements[current_index]; }
             ReverseIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const ReverseIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            ReverseIterator operator++(int) {
+                ReverseIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const ReverseIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const ReverseIterator& other) const { return !(*this == other); }
         };
 
@@ -231,16 +288,27 @@ namespace ex4 {
         private:
             std::vector<T> original_elements;
             size_t current_index;
+            const MyContainer<T>* owner;
 
         public:
-            OrderIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : original_elements(original_elements), current_index(index) {
+            OrderIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : original_elements(original_elements), current_index(index), owner(container_owner) {
                 // No modifications - keep original order
             }
 
             const T& operator*() const { return original_elements[current_index]; }
             OrderIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const OrderIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            OrderIterator operator++(int) {
+                OrderIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const OrderIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const OrderIterator& other) const { return !(*this == other); }
         };
 
@@ -253,10 +321,11 @@ namespace ex4 {
         private:
             std::vector<T> middle_out_elements;
             size_t current_index;
+            const MyContainer<T>* owner;
 
         public:
-            MiddleOutIterator(const std::vector<T>& original_elements, size_t index = 0) 
-                : current_index(index) {
+            MiddleOutIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
+                : current_index(index), owner(container_owner) {
                 
                 if (original_elements.empty()) return;
                 
@@ -283,35 +352,45 @@ namespace ex4 {
 
             const T& operator*() const { return middle_out_elements[current_index]; }
             MiddleOutIterator& operator++() { ++current_index; return *this; }
-            bool operator==(const MiddleOutIterator& other) const { return current_index == other.current_index; }
+            
+            // Added postfix operator++
+            MiddleOutIterator operator++(int) {
+                MiddleOutIterator temp = *this;
+                ++current_index;
+                return temp;
+            }
+            
+            bool operator==(const MiddleOutIterator& other) const { 
+                return owner == other.owner && current_index == other.current_index; 
+            }
             bool operator!=(const MiddleOutIterator& other) const { return !(*this == other); }
         };
 
         // ================== ITERATOR ACCESS FUNCTIONS ==================
         
         // AscendingOrder iteration
-        AscendingIterator begin_ascending_order() const { return AscendingIterator(elements, 0); }
-        AscendingIterator end_ascending_order() const { return AscendingIterator(elements, elements.size()); }
+        AscendingIterator begin_ascending_order() const { return AscendingIterator(elements, 0, this); }
+        AscendingIterator end_ascending_order() const { return AscendingIterator(elements, elements.size(), this); }
 
         // DescendingOrder iteration
-        DescendingIterator begin_descending_order() const { return DescendingIterator(elements, 0); }
-        DescendingIterator end_descending_order() const { return DescendingIterator(elements, elements.size()); }
+        DescendingIterator begin_descending_order() const { return DescendingIterator(elements, 0, this); }
+        DescendingIterator end_descending_order() const { return DescendingIterator(elements, elements.size(), this); }
 
         // SideCrossOrder iteration
-        SideCrossIterator begin_side_cross_order() const { return SideCrossIterator(elements, 0); }
-        SideCrossIterator end_side_cross_order() const { return SideCrossIterator(elements, elements.size()); }
+        SideCrossIterator begin_side_cross_order() const { return SideCrossIterator(elements, 0, this); }
+        SideCrossIterator end_side_cross_order() const { return SideCrossIterator(elements, elements.size(), this); }
 
         // ReverseOrder iteration
-        ReverseIterator begin_reverse_order() const { return ReverseIterator(elements, 0); }
-        ReverseIterator end_reverse_order() const { return ReverseIterator(elements, elements.size()); }
+        ReverseIterator begin_reverse_order() const { return ReverseIterator(elements, 0, this); }
+        ReverseIterator end_reverse_order() const { return ReverseIterator(elements, elements.size(), this); }
 
         // Natural order iteration
-        OrderIterator begin_order() const { return OrderIterator(elements, 0); }
-        OrderIterator end_order() const { return OrderIterator(elements, elements.size()); }
+        OrderIterator begin_order() const { return OrderIterator(elements, 0, this); }
+        OrderIterator end_order() const { return OrderIterator(elements, elements.size(), this); }
 
         // MiddleOutOrder iteration
-        MiddleOutIterator begin_middle_out_order() const { return MiddleOutIterator(elements, 0); }
-        MiddleOutIterator end_middle_out_order() const { return MiddleOutIterator(elements, elements.size()); }
+        MiddleOutIterator begin_middle_out_order() const { return MiddleOutIterator(elements, 0, this); }
+        MiddleOutIterator end_middle_out_order() const { return MiddleOutIterator(elements, elements.size(), this); }
 
     }; // End of MyContainer class
 

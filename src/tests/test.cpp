@@ -276,3 +276,109 @@ TEST_CASE("Iterator Consistency") {
         CHECK(first < second);  
     }
 }
+
+// חדש: טסטים לאופרטור postfix
+TEST_CASE("Postfix Iterator Operators") {
+    MyContainer<int> container;
+    container.addElement(10);
+    container.addElement(20);
+    container.addElement(30);
+    
+    SUBCASE("Difference between prefix and postfix operators") {
+        auto it1 = container.begin_ascending_order();
+        auto it2 = container.begin_ascending_order();
+        
+        // Prefix (++it) returns iterator after incrementing
+        int prefix_val = *(++it1);
+        // Postfix (it++) returns original value, then increments
+        int postfix_val = *(it2++);
+        int next_val = *it2;
+        
+        CHECK(prefix_val == 20);     // ערך לאחר קידום
+        CHECK(postfix_val == 10);    // הערך המקורי
+        CHECK(next_val == 20);       // ערך לאחר קידום
+    }
+    
+    SUBCASE("Postfix operators with all iterator types") {
+        // Test with ascending iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_ascending_order();
+            while (it != container.end_ascending_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {10, 20, 30};
+            CHECK(result == expected);
+        }
+        
+        // Test with descending iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_descending_order();
+            while (it != container.end_descending_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {30, 20, 10};
+            CHECK(result == expected);
+        }
+        
+        // Test with side cross iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_side_cross_order();
+            while (it != container.end_side_cross_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {10, 30, 20};
+            CHECK(result == expected);
+        }
+        
+        // Test with reverse iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_reverse_order();
+            while (it != container.end_reverse_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {30, 20, 10};
+            CHECK(result == expected);
+        }
+        
+        // Test with order iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_order();
+            while (it != container.end_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {10, 20, 30};
+            CHECK(result == expected);
+        }
+        
+        // Test with middle out iterator
+        {
+            std::vector<int> result;
+            auto it = container.begin_middle_out_order();
+            while (it != container.end_middle_out_order()) {
+                result.push_back(*it);
+                it++;  // Use postfix operator
+            }
+            std::vector<int> expected = {20, 10, 30};
+            CHECK(result == expected);
+        }
+    }
+    
+    SUBCASE("Using postfix in for loop") {
+        std::vector<int> result;
+        for (auto it = container.begin_ascending_order(); it != container.end_ascending_order(); it++) {
+            result.push_back(*it);
+        }
+        std::vector<int> expected = {10, 20, 30};
+        CHECK(result == expected);
+    }
+}
