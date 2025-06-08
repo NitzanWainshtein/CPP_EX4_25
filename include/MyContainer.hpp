@@ -135,7 +135,7 @@ namespace ex4 {
         private:
             std::vector<T> sorted_elements;
             size_t current_index;
-            const MyContainer<T>* owner;  // Added to fix comparison issue
+            const MyContainer<T>* owner;
 
         public:
             AscendingIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
@@ -143,10 +143,28 @@ namespace ex4 {
                 std::sort(sorted_elements.begin(), sorted_elements.end());
             }
 
-            const T& operator*() const { return sorted_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= sorted_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return sorted_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             AscendingIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             AscendingIterator operator++(int) {
                 AscendingIterator temp = *this;
                 ++current_index;
@@ -175,10 +193,28 @@ namespace ex4 {
                 std::sort(sorted_elements.rbegin(), sorted_elements.rend());
             }
 
-            const T& operator*() const { return sorted_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= sorted_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return sorted_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             DescendingIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             DescendingIterator operator++(int) {
                 DescendingIterator temp = *this;
                 ++current_index;
@@ -206,7 +242,7 @@ namespace ex4 {
             SideCrossIterator(const std::vector<T>& original_elements, size_t index, const MyContainer<T>* container_owner) 
                 : current_index(index), owner(container_owner) {
                 
-                // Fix: Handle empty container case
+                // Handle empty container case
                 if (original_elements.empty()) {
                     return;
                 }
@@ -217,7 +253,7 @@ namespace ex4 {
                 cross_ordered_elements.reserve(sorted_elements.size());
                 
                 size_t left = 0;
-                size_t right = sorted_elements.size() - 1;  // Now safe!
+                size_t right = sorted_elements.size() - 1;
                 bool take_from_left = true;
                 
                 while (left <= right) {
@@ -230,10 +266,28 @@ namespace ex4 {
                 }
             }
 
-            const T& operator*() const { return cross_ordered_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= cross_ordered_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return cross_ordered_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             SideCrossIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             SideCrossIterator operator++(int) {
                 SideCrossIterator temp = *this;
                 ++current_index;
@@ -263,10 +317,28 @@ namespace ex4 {
                 std::reverse(reversed_elements.begin(), reversed_elements.end());
             }
 
-            const T& operator*() const { return reversed_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= reversed_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return reversed_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             ReverseIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             ReverseIterator operator++(int) {
                 ReverseIterator temp = *this;
                 ++current_index;
@@ -296,10 +368,28 @@ namespace ex4 {
                 // No modifications - keep original order
             }
 
-            const T& operator*() const { return original_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= original_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return original_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             OrderIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             OrderIterator operator++(int) {
                 OrderIterator temp = *this;
                 ++current_index;
@@ -350,10 +440,28 @@ namespace ex4 {
                 }
             }
 
-            const T& operator*() const { return middle_out_elements[current_index]; }
+            /**
+             * Dereference operator
+             * @return Reference to the current element
+             * @throws std::out_of_range if iterator is out of bounds
+             */
+            const T& operator*() const { 
+                if (current_index >= middle_out_elements.size()) {
+                    throw std::out_of_range("Iterator out of bounds");
+                }
+                return middle_out_elements[current_index]; 
+            }
+
+            /**
+             * Pre-increment operator
+             * @return Reference to this iterator after incrementing
+             */
             MiddleOutIterator& operator++() { ++current_index; return *this; }
             
-            // Added postfix operator++
+            /**
+             * Post-increment operator
+             * @return Copy of iterator before incrementing
+             */
             MiddleOutIterator operator++(int) {
                 MiddleOutIterator temp = *this;
                 ++current_index;
