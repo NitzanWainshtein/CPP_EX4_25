@@ -57,9 +57,9 @@ TEST_CASE("Basic Container Operations") {
     
     SUBCASE("Add elements") {
         MyContainer<int> container;
-        container.addElement(5);
-        container.addElement(3);
-        container.addElement(8);
+        container.add(5);
+        container.add(3);
+        container.add(8);
         
         CHECK(container.size() == 3);
         CHECK(container.empty() == false);
@@ -67,32 +67,32 @@ TEST_CASE("Basic Container Operations") {
     
     SUBCASE("Remove existing element") {
         MyContainer<int> container;
-        container.addElement(1);
-        container.addElement(2);
-        container.addElement(3);
+        container.add(1);
+        container.add(2);
+        container.add(3);
         
-        CHECK_NOTHROW(container.removeElement(2));
+        CHECK_NOTHROW(container.remove(2));
         CHECK(container.size() == 2);
     }
     
     SUBCASE("Remove non-existing element throws exception") {
         MyContainer<int> container;
-        container.addElement(1);
-        container.addElement(2);
+        container.add(1);
+        container.add(2);
         
-        CHECK_THROWS_AS(container.removeElement(99), std::runtime_error);
+        CHECK_THROWS_AS(container.remove(99), std::runtime_error);
     }
     
     SUBCASE("Remove all occurrences") {
         MyContainer<int> container;
-        container.addElement(5);
-        container.addElement(3);
-        container.addElement(5);
-        container.addElement(1);
-        container.addElement(5);
+        container.add(5);
+        container.add(3);
+        container.add(5);
+        container.add(1);
+        container.add(5);
         
         CHECK(container.size() == 5);
-        container.removeElement(5);
+        container.remove(5);
         CHECK(container.size() == 2);
     }
 }
@@ -101,30 +101,30 @@ TEST_CASE("Copy Operations") {
     
     SUBCASE("Copy constructor") {
         MyContainer<int> original;
-        original.addElement(1);
-        original.addElement(2);
-        original.addElement(3);
+        original.add(1);
+        original.add(2);
+        original.add(3);
         
         MyContainer<int> copied(original);
         CHECK(copied.size() == original.size());
         
         // Verify independence
-        original.addElement(4);
+        original.add(4);
         CHECK(original.size() == 4);
         CHECK(copied.size() == 3);
     }
     
     SUBCASE("Assignment operator") {
         MyContainer<int> original;
-        original.addElement(10);
-        original.addElement(20);
+        original.add(10);
+        original.add(20);
         
         MyContainer<int> assigned;
         assigned = original;
         CHECK(assigned.size() == original.size());
         
         // Verify independence
-        original.addElement(30);
+        original.add(30);
         CHECK(original.size() == 3);
         CHECK(assigned.size() == 2);
     }
@@ -132,11 +132,11 @@ TEST_CASE("Copy Operations") {
 
 TEST_CASE("Iterator Operations - Integer") {
     MyContainer<int> container;
-    container.addElement(7);
-    container.addElement(15);
-    container.addElement(6);
-    container.addElement(1);
-    container.addElement(2);
+    container.add(7);
+    container.add(15);
+    container.add(6);
+    container.add(1);
+    container.add(2);
     
     SUBCASE("Ascending order iterator") {
         auto result = toVector(container, "ascending");
@@ -177,9 +177,9 @@ TEST_CASE("Iterator Operations - Integer") {
 
 TEST_CASE("String Container") {
     MyContainer<std::string> container;
-    container.addElement("zebra");
-    container.addElement("apple");
-    container.addElement("dog");
+    container.add("zebra");
+    container.add("apple");
+    container.add("dog");
     
     SUBCASE("String ascending order") {
         std::vector<std::string> result;
@@ -192,10 +192,10 @@ TEST_CASE("String Container") {
     
     SUBCASE("String removal") {
         CHECK(container.size() == 3);
-        container.removeElement("dog");
+        container.remove("dog");
         CHECK(container.size() == 2);
         
-        CHECK_THROWS_AS(container.removeElement("cat"), std::runtime_error);
+        CHECK_THROWS_AS(container.remove("cat"), std::runtime_error);
     }
 }
 
@@ -219,7 +219,7 @@ TEST_CASE("Edge Cases") {
     
     SUBCASE("Single element container") {
         MyContainer<int> single;
-        single.addElement(42);
+        single.add(42);
         
         CHECK(toVector(single, "ascending") == std::vector<int>{42});
         CHECK(toVector(single, "descending") == std::vector<int>{42});
@@ -229,8 +229,8 @@ TEST_CASE("Edge Cases") {
     
     SUBCASE("Two elements container") {
         MyContainer<int> two;
-        two.addElement(5);
-        two.addElement(3);
+        two.add(5);
+        two.add(3);
         
         CHECK(toVector(two, "ascending") == std::vector<int>({3, 5}));
         CHECK(toVector(two, "descending") == std::vector<int>({5, 3}));
@@ -242,20 +242,20 @@ TEST_CASE("Edge Cases") {
 TEST_CASE("Default Template Parameter") {
     SUBCASE("MyContainer<> defaults to int") {
         MyContainer<> container;  // Uses default int
-        container.addElement(100);
-        container.addElement(50);
+        container.add(100);
+        container.add(50);
         
         CHECK(container.size() == 2);
-        CHECK_NOTHROW(container.removeElement(50));
+        CHECK_NOTHROW(container.remove(50));
         CHECK(container.size() == 1);
     }
 }
 
 TEST_CASE("Iterator Consistency") {
     MyContainer<int> container;
-    container.addElement(10);
-    container.addElement(5);
-    container.addElement(15);
+    container.add(10);
+    container.add(5);
+    container.add(15);
     
     SUBCASE("Multiple iterations give same result") {
         auto result1 = toVector(container, "ascending");
@@ -280,9 +280,9 @@ TEST_CASE("Iterator Consistency") {
 // חדש: טסטים לאופרטור postfix
 TEST_CASE("Postfix Iterator Operators") {
     MyContainer<int> container;
-    container.addElement(10);
-    container.addElement(20);
-    container.addElement(30);
+    container.add(10);
+    container.add(20);
+    container.add(30);
     
     SUBCASE("Difference between prefix and postfix operators") {
         auto it1 = container.begin_ascending_order();

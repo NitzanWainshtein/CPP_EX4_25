@@ -56,7 +56,7 @@ namespace ex4 {
          * Add an element to the container
          * @param element The element to add to the container
          */
-        void addElement(const T& element) {
+        void add(const T& element) {
             elements.push_back(element);
         }
 
@@ -65,7 +65,7 @@ namespace ex4 {
          * @param element The element to remove
          * @throws std::runtime_error if element is not found in container
          */
-        void removeElement(const T& element) {
+        void remove(const T& element) {
             auto it = std::find(elements.begin(), elements.end(), element);
             if (it == elements.end()) {
                 throw std::runtime_error("Element was not found in the container");

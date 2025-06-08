@@ -32,13 +32,13 @@ void testIntegerContainer() {
     
     // Add elements
     std::cout << "Adding elements: 7, 15, 6, 1, 2, 15, 1" << std::endl;
-    intContainer.addElement(7);
-    intContainer.addElement(15);
-    intContainer.addElement(6);
-    intContainer.addElement(1);
-    intContainer.addElement(2);
-    intContainer.addElement(15);  // Duplicate
-    intContainer.addElement(1);   // Duplicate
+    intContainer.add(7);
+    intContainer.add(15);
+    intContainer.add(6);
+    intContainer.add(1);
+    intContainer.add(2);
+    intContainer.add(15);  // Duplicate
+    intContainer.add(1);   // Duplicate
     
     std::cout << "Container: " << intContainer << std::endl;
     std::cout << "Size: " << intContainer.size() << std::endl;
@@ -55,7 +55,7 @@ void testIntegerContainer() {
     // Test removal
     std::cout << "\n--- Testing Removal ---" << std::endl;
     std::cout << "Removing element 15 (appears twice)..." << std::endl;
-    intContainer.removeElement(15);
+    intContainer.remove(15);
     std::cout << "After removal: " << intContainer << std::endl;
     std::cout << "New size: " << intContainer.size() << std::endl;
     
@@ -63,7 +63,7 @@ void testIntegerContainer() {
     std::cout << "\n--- Testing Error Handling ---" << std::endl;
     try {
         std::cout << "Trying to remove non-existent element 99..." << std::endl;
-        intContainer.removeElement(99);
+        intContainer.remove(99);
     } catch (const std::runtime_error& e) {
         std::cout << "Caught expected error: " << e.what() << std::endl;
     }
@@ -77,11 +77,11 @@ void testStringContainer() {
     
     // Add elements
     std::cout << "Adding strings: \"zebra\", \"apple\", \"dog\", \"cat\", \"elephant\"" << std::endl;
-    stringContainer.addElement("zebra");
-    stringContainer.addElement("apple");
-    stringContainer.addElement("dog");
-    stringContainer.addElement("cat");
-    stringContainer.addElement("elephant");
+    stringContainer.add("zebra");
+    stringContainer.add("apple");
+    stringContainer.add("dog");
+    stringContainer.add("cat");
+    stringContainer.add("elephant");
     
     std::cout << "Container: " << stringContainer << std::endl;
     std::cout << "Size: " << stringContainer.size() << std::endl;
@@ -97,7 +97,7 @@ void testStringContainer() {
     // Test removal
     std::cout << "\n--- Testing String Removal ---" << std::endl;
     std::cout << "Removing \"dog\"..." << std::endl;
-    stringContainer.removeElement("dog");
+    stringContainer.remove("dog");
     std::cout << "After removal: " << stringContainer << std::endl;
 }
 
@@ -109,11 +109,11 @@ void testDoubleContainer() {
     
     // Add elements
     std::cout << "Adding doubles: 3.14, 2.71, 1.41, 0.57, 2.23" << std::endl;
-    doubleContainer.addElement(3.14);
-    doubleContainer.addElement(2.71);
-    doubleContainer.addElement(1.41);
-    doubleContainer.addElement(0.57);
-    doubleContainer.addElement(2.23);
+    doubleContainer.add(3.14);
+    doubleContainer.add(2.71);
+    doubleContainer.add(1.41);
+    doubleContainer.add(0.57);
+    doubleContainer.add(2.23);
     
     std::cout << "Container: " << doubleContainer << std::endl;
     std::cout << "Size: " << doubleContainer.size() << std::endl;
@@ -136,11 +136,11 @@ void testDefaultType() {
     std::cout << "Creating MyContainer<> (default int type)" << std::endl;
     std::cout << "Adding elements: 100, 50, 75, 25, 90" << std::endl;
     
-    defaultContainer.addElement(100);
-    defaultContainer.addElement(50);
-    defaultContainer.addElement(75);
-    defaultContainer.addElement(25);
-    defaultContainer.addElement(90);
+    defaultContainer.add(100);
+    defaultContainer.add(50);
+    defaultContainer.add(75);
+    defaultContainer.add(25);
+    defaultContainer.add(90);
     
     std::cout << "Container: " << defaultContainer << std::endl;
     printIteratorResult("Ascending", defaultContainer.begin_ascending_order(), defaultContainer.end_ascending_order());
@@ -152,9 +152,9 @@ void testCopyOperations() {
     printHeader("COPY OPERATIONS DEMONSTRATION");
     
     MyContainer<int> original;
-    original.addElement(1);
-    original.addElement(2);
-    original.addElement(3);
+    original.add(1);
+    original.add(2);
+    original.add(3);
     
     std::cout << "Original container: " << original << std::endl;
     
@@ -168,7 +168,7 @@ void testCopyOperations() {
     std::cout << "Assigned container: " << assigned << std::endl;
     
     // Modify original to show independence
-    original.addElement(4);
+    original.add(4);
     std::cout << "\nAfter adding 4 to original:" << std::endl;
     std::cout << "Original: " << original << std::endl;
     std::cout << "Copied: " << copied << std::endl;
@@ -189,7 +189,7 @@ void testEdgeCases() {
     // Single element
     std::cout << "\n--- Single Element ---" << std::endl;
     MyContainer<char> singleContainer;
-    singleContainer.addElement('X');
+    singleContainer.add('X');
     std::cout << "Single element container: " << singleContainer << std::endl;
     printIteratorResult("Ascending", singleContainer.begin_ascending_order(), singleContainer.end_ascending_order());
     printIteratorResult("MiddleOut", singleContainer.begin_middle_out_order(), singleContainer.end_middle_out_order());
@@ -197,8 +197,8 @@ void testEdgeCases() {
     // Two elements
     std::cout << "\n--- Two Elements ---" << std::endl;
     MyContainer<char> twoContainer;
-    twoContainer.addElement('B');
-    twoContainer.addElement('A');
+    twoContainer.add('B');
+    twoContainer.add('A');
     std::cout << "Two elements container: " << twoContainer << std::endl;
     printIteratorResult("Ascending", twoContainer.begin_ascending_order(), twoContainer.end_ascending_order());
     printIteratorResult("MiddleOut", twoContainer.begin_middle_out_order(), twoContainer.end_middle_out_order());
@@ -210,7 +210,7 @@ void testPostfixOperators() {
     
     MyContainer<int> container;
     for (int i = 1; i <= 5; ++i) {
-        container.addElement(i);
+        container.add(i);
     }
     
     std::cout << "Container: " << container << std::endl;
